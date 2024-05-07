@@ -8,15 +8,19 @@ const CartItem = ({ item, onRemove, onIncrease, onDecrease }) => {
             <View style={styles.info}>
                 <Text style={styles.title}>{item.title}</Text>
                 <Text style={styles.price}>${item.price}</Text>
-                <Text style={styles.additionalInfo}>{item.additionalInfo}</Text>
                 <View style={styles.quantityControls}>
-                    <TouchableOpacity onPress={() => onDecrease(item.id)}>
-                        <Text style={styles.controlButton}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantity}>{item.quantity}</Text>
-                    <TouchableOpacity onPress={() => onIncrease(item.id)}>
-                        <Text style={styles.controlButton}>+</Text>
-                    </TouchableOpacity>
+                    <View>
+                        <Text style={styles.additionalInfo}>{item.additionalInfo}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity onPress={() => onDecrease(item.id)}>
+                            <Text style={styles.controlButton}>-</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.quantity}>{item.quantity}</Text>
+                        <TouchableOpacity onPress={() => onIncrease(item.id)}>
+                            <Text style={styles.controlButton}>+</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             <TouchableOpacity onPress={() => onRemove(item.id)}>
@@ -33,6 +37,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
+        backgroundColor: 'blue'
     },
     image: {
         width: 60,
@@ -41,6 +46,7 @@ const styles = StyleSheet.create({
     },
     info: {
         flex: 1,
+        backgroundColor: 'purple'
     },
     title: {
         fontSize: 16,
@@ -57,6 +63,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 5,
+        justifyContent: 'space-between'
     },
     controlButton: {
         fontSize: 20,
