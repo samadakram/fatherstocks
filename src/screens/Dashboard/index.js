@@ -1,39 +1,22 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'underscore';
-import * as RootNavigation from '../../core/utils/navigation';
-import Main from '../../components/layouts/Main';
-// import styles from './styles';
-import useAuth from '../../core/auth/useAuth';
+import { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import Main from '../../components/layouts/Main';
+import LinearGradient from 'react-native-linear-gradient';
+import styles from './styles';
 import CartItem from './CartItem';
+import { cartData } from './config/cartData';
 
 const Dashboard = () => {
 
-    const { auth } = useAuth();
-    const dispatch = useDispatch();
-
     const [modalVisible, setModalVisible] = useState(false);
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            title: 'Tiara Muhallaba Dessert Mix 85...',
-            price: 550.9,
-            quantity: 1,
-            additionalInfo: '15% Discount',
-            image: 'https://via.placeholder.com/60',
-        },
-        {
-            id: 2,
-            title: 'Tiara Muhallaba Dessert Mix 85...',
-            price: 550.9,
-            quantity: 2,
-            additionalInfo: '15% Discount',
-            image: 'https://via.placeholder.com/60',
-        },
-        // Add other items as needed
-    ]);
+    const [cartItems, setCartItems] = useState(cartData || []);
+
+    const calculateTotal = () => {
+        return cartItems.reduce(
+            (acc, item) => item.selected ? acc + item.price * item.quantity : acc,
+            0
+        );
+    };
 
     const onIncrease = (id) => {
         setCartItems((prevItems) =>
@@ -55,21 +38,35 @@ const Dashboard = () => {
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     };
 
-    const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const onSelect = (id) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id ? { ...item, selected: !item.selected } : item
+            )
+        );
+    };
+
+    const deleteSelectedItems = () => {
+        setCartItems((prevItems) => prevItems.filter((item) => !item.selected));
+    };
 
 
     return (
-        <Main displayFooter modalVisible={modalVisible} setModalVisible={setModalVisible}>
+        <Main modalVisible={modalVisible} setModalVisible={setModalVisible}>
             <View style={styles.container}>
-                <View style={styles.header}>
+                <LinearGradient
+                    colors={['#FFD4C7', '#EFF3D3']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.header}>
                     <TouchableOpacity style={styles.backButton}>
-                        <Text>{"<"}</Text>
+                        <Text style={{ fontWeight: '900', fontSize: 25, color: '#000' }}>{"<"}</Text>
                     </TouchableOpacity>
                     <Text style={styles.title}>Shopping cart ({cartItems.length})</Text>
-                    <TouchableOpacity style={styles.deleteButton}>
-                        <Text>{"🗑️"}</Text>
+                    <TouchableOpacity style={styles.deleteButton} onPress={deleteSelectedItems}>
+                        <Text style={{ color: '#000' }}>{"🗑️"}</Text>
                     </TouchableOpacity>
-                </View>
+                </LinearGradient>
                 <FlatList
                     data={cartItems}
                     renderItem={({ item }) => (
@@ -78,15 +75,16 @@ const Dashboard = () => {
                             onRemove={onRemove}
                             onIncrease={onIncrease}
                             onDecrease={onDecrease}
+                            onSelect={onSelect}
                         />
                     )}
                     keyExtractor={(item) => item.id.toString()}
                     style={styles.list}
                 />
                 <View style={styles.bottomBar}>
-                    <Text style={styles.totalPrice}>${total.toFixed(2)}</Text>
+                    <Text style={styles.totalPrice}>${calculateTotal().toFixed(2)}</Text>
                     <TouchableOpacity style={styles.checkoutButton}>
-                        <Text style={styles.checkoutButtonText}>Checkout ({cartItems.length})</Text>
+                        <Text style={styles.checkoutButtonText}>Checkout ({cartItems.filter(item => item.selected).length})</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -94,53 +92,5 @@ const Dashboard = () => {
         </Main>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: '#f5f5f5',
-    },
-    backButton: {
-        padding: 10,
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    deleteButton: {
-        padding: 10,
-    },
-    list: {
-        flex: 1,
-    },
-    bottomBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#ddd',
-    },
-    totalPrice: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    checkoutButton: {
-        backgroundColor: '#FF5733',
-        padding: 10,
-        borderRadius: 5,
-    },
-    checkoutButtonText: {
-        color: 'white',
-        fontSize: 16,
-    },
-});
-
 
 export default Dashboard;

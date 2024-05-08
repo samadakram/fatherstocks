@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 
-const CartItem = ({ item, onRemove, onIncrease, onDecrease }) => {
+const CartItem = ({ item, onIncrease, onDecrease, onSelect }) => {
     return (
         <View style={styles.cartItem}>
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <Pressable style={styles.radio} onPress={() => onSelect(item.id)}>
+                {item.selected && <View style={styles.radioSelected} />}
+            </Pressable>
+            <Image source={item.image} style={styles.image} />
             <View style={styles.info}>
                 <Text style={styles.title}>{item.title}</Text>
                 <Text style={styles.price}>${item.price}</Text>
@@ -12,20 +15,17 @@ const CartItem = ({ item, onRemove, onIncrease, onDecrease }) => {
                     <View>
                         <Text style={styles.additionalInfo}>{item.additionalInfo}</Text>
                     </View>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity onPress={() => onDecrease(item.id)}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity style={styles.btn} onPress={() => onDecrease(item.id)}>
                             <Text style={styles.controlButton}>-</Text>
                         </TouchableOpacity>
                         <Text style={styles.quantity}>{item.quantity}</Text>
-                        <TouchableOpacity onPress={() => onIncrease(item.id)}>
+                        <TouchableOpacity style={styles.btn} onPress={() => onIncrease(item.id)}>
                             <Text style={styles.controlButton}>+</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
-            <TouchableOpacity onPress={() => onRemove(item.id)}>
-                <Text style={styles.removeButton}>X</Text>
-            </TouchableOpacity>
         </View>
     );
 };
@@ -37,27 +37,53 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
-        backgroundColor: 'blue'
+        marginTop: 5
+    },
+    radio: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: '#8A8B9D',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    radioSelected: {
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        backgroundColor: '#FF612F',
+        borderColor: '#FF612F'
     },
     image: {
-        width: 60,
-        height: 60,
         marginRight: 10,
+        width: 80,
+        height: 80,
     },
     info: {
         flex: 1,
-        backgroundColor: 'purple'
+        paddingVertical: 5
     },
     title: {
-        fontSize: 16,
+        fontSize: 14,
+        fontWeight: '400',
+        color: '#000',
+        fontFamily: 'Aeonik',
+        marginTop: 15
     },
     price: {
-        color: '#FF5733',
-        fontWeight: 'bold',
+        fontWeight: '500',
+        fontSize: 18,
+        fontFamily: 'Aeonik',
+        color: '#000'
     },
     additionalInfo: {
-        color: '#FF5733',
+        color: '#FF612F',
         fontSize: 12,
+        fontWeight: '400',
+        fontFamily: 'Aeonik',
+        marginBottom: 5
     },
     quantityControls: {
         flexDirection: 'row',
@@ -66,16 +92,27 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     controlButton: {
-        fontSize: 20,
+        fontSize: 25,
         marginHorizontal: 10,
+        color: '#000'
     },
     quantity: {
-        fontSize: 16,
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#000'
     },
     removeButton: {
         color: 'red',
         fontWeight: 'bold',
     },
+    btn: {
+        backgroundColor: '#f6f6f6',
+        borderRadius: 20,
+        width: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 5
+    }
 });
 
 export default CartItem;

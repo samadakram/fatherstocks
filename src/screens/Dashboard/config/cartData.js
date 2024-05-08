@@ -1,0 +1,38 @@
+export const cartData = [
+    {
+        id: 1,
+        title: 'Tiara Muhallaba Dessert Mix 85...',
+        price: 550.9,
+        quantity: 1,
+        additionalInfo: '15% Discount',
+        image: require('../../../assets/images/Item.png'),
+        selected: false,
+    },
+    {
+        id: 2,
+        title: 'Elysees Gelatin Treatment Shampoo...',
+        price: 550.9,
+        quantity: 1,
+        additionalInfo: 'Super Deal',
+        image: require('../../../assets//images/items.png'),
+        selected: false,
+    },
+    {
+        id: 3,
+        title: 'Elysees Gelatin Treatment Shampoo...',
+        price: 550.9,
+        quantity: 1,
+        additionalInfo: 'Free shipping',
+        image: require('../../../assets//images/items.png'),
+        selected: false,
+    },
+    {
+        id: 4,
+        title: 'Elysees Gelatin Treatment Shampoo...',
+        price: 550.9,
+        quantity: 1,
+        additionalInfo: '15% Discount',
+        image: require('../../../assets//images/items.png'),
+        selected: false,
+    },
+];
